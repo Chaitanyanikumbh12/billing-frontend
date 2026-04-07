@@ -9,7 +9,7 @@
 <body>
   <div class="container">
 
-    <!-- LOGIN SECTION -->
+    <!-- LOGIN -->
     <div id="loginSection" class="login-box card">
       <div class="header">
         <h1>🔐 Admin Login</h1>
@@ -19,21 +19,36 @@
         <input type="text" id="username" placeholder="Username" />
         <input type="password" id="password" placeholder="Password" />
         <button onclick="login()">Login</button>
+        <button class="secondary" onclick="showRegister()">Register</button>
       </div>
       <p class="small-text">Default Login → Username: <b>admin</b> | Password: <b>admin123</b></p>
     </div>
 
+    <!-- REGISTER -->
+    <div id="registerSection" class="login-box card hidden">
+      <div class="header">
+        <h1>📝 Register</h1>
+        <p>Create a new account</p>
+      </div>
+      <div class="form-grid">
+        <input type="text" id="reg_username" placeholder="Choose Username" />
+        <input type="password" id="reg_password" placeholder="Choose Password" />
+        <input type="password" id="reg_confirm" placeholder="Confirm Password" />
+        <button onclick="register()">Create Account</button>
+        <button class="secondary" onclick="showLogin()">← Back to Login</button>
+      </div>
+    </div>
+
     <!-- MAIN APP -->
     <div id="appSection" class="hidden">
-
       <div class="header">
         <h1>💳 Advanced Billing System</h1>
-        <p>Modern Black + Blue Billing Dashboard</p>
+        <p id="loggedInUser">Welcome, Admin</p>
       </div>
 
       <div class="nav">
         <button class="btn" onclick="showPage('dashboardPage')">📊 Dashboard</button>
-        <button class="btn" onclick="showPage('productsPage')">📦 Add Products</button>
+        <button class="btn" onclick="showPage('productsPage')">📦 Products</button>
         <button class="btn" onclick="showPage('billingPage')">🧾 Create Bill</button>
         <button class="btn" onclick="showPage('billsPage')">📁 View Bills</button>
         <button class="btn danger" onclick="logout()">🚪 Logout</button>
@@ -43,8 +58,8 @@
       <div id="dashboardPage" class="page">
         <div class="card">
           <span class="tag">Dashboard</span>
-          <h2>Welcome Admin</h2>
-          <p>Use the navigation above to manage products, create customer bills, and view saved invoices.</p>
+          <h2>Welcome!</h2>
+          <p>Use the navigation above to manage products, create bills, and view invoices.</p>
         </div>
         <div class="form-grid">
           <div class="card"><h2>Total Products</h2><h1 id="totalProducts">0</h1></div>
@@ -53,7 +68,7 @@
         </div>
       </div>
 
-      <!-- PRODUCTS PAGE -->
+      <!-- PRODUCTS -->
       <div id="productsPage" class="page hidden">
         <div class="card">
           <span class="tag">Products</span>
@@ -68,15 +83,13 @@
         <div class="card">
           <h2>Product List</h2>
           <table>
-            <thead>
-              <tr><th>#</th><th>Product Name</th><th>Price</th><th>Stock</th><th>Action</th></tr>
-            </thead>
+            <thead><tr><th>#</th><th>Name</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>
             <tbody id="productsTableBody"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- BILLING PAGE -->
+      <!-- BILLING -->
       <div id="billingPage" class="page hidden">
         <div class="card">
           <span class="tag">Billing</span>
@@ -97,9 +110,7 @@
         <div class="card">
           <h2>Invoice</h2>
           <table>
-            <thead>
-              <tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr>
-            </thead>
+            <thead><tr><th>Item</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr></thead>
             <tbody id="billTableBody"></tbody>
           </table>
           <div class="summary">
@@ -109,15 +120,13 @@
         </div>
       </div>
 
-      <!-- SAVED BILLS PAGE -->
+      <!-- BILLS -->
       <div id="billsPage" class="page hidden">
         <div class="card">
           <span class="tag">Saved Bills</span>
           <h2>Bill History</h2>
           <table>
-            <thead>
-              <tr><th>Bill ID</th><th>Customer Name</th><th>Phone</th><th>Total Amount</th><th>Date</th></tr>
-            </thead>
+            <thead><tr><th>Bill ID</th><th>Customer</th><th>Phone</th><th>Amount</th><th>Date</th></tr></thead>
             <tbody id="billsTableBody"></tbody>
           </table>
         </div>
