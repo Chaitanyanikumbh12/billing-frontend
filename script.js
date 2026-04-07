@@ -1,7 +1,5 @@
-// ── CONFIG — Railway backend URL ──────────────────────────────────────────
 const API_BASE = "https://billing-system-production-6f7b.up.railway.app";
 
-// ── STATE ─────────────────────────────────────────────────────────────────
 let products = [];
 let bills = [];
 let billItems = [];
@@ -241,5 +239,4 @@ async function refreshAll() {
   updateDashboard();
 }
 
-// Init
 renderBillTable();
