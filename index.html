@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advanced Billing System</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #050816, #091224, #0b1d40);
+      color: white;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1150px;
+      margin: auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      color: #4da6ff;
+      font-size: 2.5rem;
+      text-shadow: 0 0 15px rgba(77, 166, 255, 0.3);
+    }
+
+    .header p {
+      color: #9bc8ff;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: rgba(10, 16, 32, 0.95);
+      border: 1px solid rgba(77, 166, 255, 0.18);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+
+    .card h2 {
+      color: #66b3ff;
+      margin-bottom: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+    }
+
+    input, select {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #1c4b87;
+      background: #0e172a;
+      color: white;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: #4da6ff;
+      box-shadow: 0 0 10px rgba(77,166,255,0.35);
+    }
+
+    button, .btn {
+      padding: 13px 18px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #007bff, #00aaff);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.3s ease;
+    }
+
+    button:hover, .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px rgba(0, 170, 255, 0.4);
+    }
+
+    .danger {
+      background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: center;
+    }
+
+    thead {
+      background: #102244;
+      color: #66b3ff;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    tbody tr:hover {
+      background: rgba(77, 166, 255, 0.08);
+    }
+
+    .summary {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .login-box {
+      max-width: 420px;
+      margin: 80px auto;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .small-text {
+      font-size: 14px;
+      color: #9bc8ff;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(77,166,255,0.12);
+      color: #7fc1ff;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      th, td {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- LOGIN SECTION -->
+    <div id="loginSection" class="login-box card">
+      <div class="header">
+        <h1>🔐 Admin Login</h1>
+        <p>Advanced Billing System</p>
+      </div>
+
+      <div class="form-grid">
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+      </div>
+
+      <p class="small-text">Default Login → Username: <b>admin</b> | Password: <b>admin123</b></p>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="appSection" class="hidden">
+
+      <div class="header">
+        <h1>💳 Advanced Billing System</h1>
+        <p>Modern Black + Blue Billing Dashboard</p>
+      </div>
+
+      <div class="nav">
+        <button class="btn" onclick="showPage('dashboardPage')">📊 Dashboard</button>
+        <button class="btn" onclick="showPage('productsPage')">📦 Add Products</button>
+        <button class="btn" onclick="showPage('billingPage')">🧾 Create Bill</button>
+        <button class="btn" onclick="showPage('billsPage')">📁 View Bills</button>
+        <button class="btn danger" onclick="logout()">🚪 Logout</button>
+      </div>
+
+      <!-- DASHBOARD -->
+      <div id="dashboardPage" class="page">
+        <div class="card">
+          <span class="tag">Dashboard</span>
+          <h2>Welcome Admin</h2>
+          <p>Use the navigation above to manage products, create customer bills, and view saved invoices — all from one file.</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="card">
+            <h2>Total Products</h2>
+            <h1 id="totalProducts">0</h1>
+          </div>
+
+          <div class="card">
+            <h2>Total Bills</h2>
+            <h1 id="totalBills">0</h1>
+          </div>
+
+          <div class="card">
+            <h2>Total Revenue</h2>
+            <h1>₹ <span id="totalRevenue">0</span></h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS PAGE -->
+      <div id="productsPage" class="page hidden">
+        <div class="card">
+          <span class="tag">Products</span>
+          <h2>Add New Product</h2>
+          <div class="form-grid">
+            <input type="text" id="product_name" placeholder="Product Name" />
+            <input type="number" id="product_price" placeholder="Price" />
+            <input type="number" id="product_stock" placeholder="Stock" />
+            <button onclick="addProduct()">Save Product</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Product List</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BILLING PAGE -->
+      <div id="billingPage" class="page hidden">
+        <div class="card">
+          <span class="tag">Billing</span>
+          <h2>Customer Details</h2>
+          <div class="form-grid">
+            <input type="text" id="customerName" placeholder="Customer Name" />
+            <input type="text" id="customerPhone" placeholder="Customer Phone" />
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Add Bill Item</h2>
+          <div class="form-grid">
+            <select id="productDropdown">
+              <option value="">Select Product</option>
+            </select>
+            <input type="number" id="itemQty" placeholder="Quantity" />
+            <button onclick="addItemFromProduct()">Add Item</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Invoice</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="billTableBody"></tbody>
+          </table>
+
+          <div class="summary">
+            <h3>Grand Total: ₹ <span id="grandTotal">0</span></h3>
+            <button onclick="saveBill()">Save Bill</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SAVED BILLS PAGE -->
+      <div id="billsPage" class="page hidden">
+        <div class="card">
+          <span class="tag">Saved Bills</span>
+          <h2>Bill History</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Bill ID</th>
+                <th>Customer Name</th>
+                <th>Phone</th>
+                <th>Total Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="billsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // -------------------------
+    // LOCAL STORAGE DATABASE
+    // -------------------------
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let bills = JSON.parse(localStorage.getItem("bills")) || [];
+    let billItems = [];
+
+    // -------------------------
+    // LOGIN
+    // -------------------------
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (username === "admin" && password === "admin123") {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("appSection").classList.remove("hidden");
+        showPage("dashboardPage");
+        refreshAll();
+      } else {
+        alert("Invalid Login! Use admin / admin123");
+      }
+    }
+
+    function logout() {
+      document.getElementById("loginSection").classList.remove("hidden");
+      document.getElementById("appSection").classList.add("hidden");
+      document.getElementById("username").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    // -------------------------
+    // PAGE NAVIGATION
+    // -------------------------
+    function showPage(pageId) {
+      const pages = document.querySelectorAll(".page");
+      pages.forEach(page => page.classList.add("hidden"));
+      document.getElementById(pageId).classList.remove("hidden");
+
+      if (pageId === "productsPage") renderProducts();
+      if (pageId === "billingPage") renderProductDropdown();
+      if (pageId === "billsPage") renderBills();
+      if (pageId === "dashboardPage") updateDashboard();
+    }
+
+    // -------------------------
+    // PRODUCTS
+    // -------------------------
+    function addProduct() {
+      const name = document.getElementById("product_name").value.trim();
+      const price = parseFloat(document.getElementById("product_price").value);
+      const stock = parseInt(document.getElementById("product_stock").value);
+
+      if (!name || isNaN(price) || isNaN(stock) || price <= 0 || stock < 0) {
+        alert("Please enter valid product details.");
+        return;
+      }
+
+      products.push({
+        id: Date.now(),
+        name,
+        price,
+        stock
+      });
+
+      localStorage.setItem("products", JSON.stringify(products));
+
+      document.getElementById("product_name").value = "";
+      document.getElementById("product_price").value = "";
+      document.getElementById("product_stock").value = "";
+
+      renderProducts();
+      renderProductDropdown();
+      updateDashboard();
+      alert("Product added successfully!");
+    }
+
+    function renderProducts() {
+      const tbody = document.getElementById("productsTableBody");
+      tbody.innerHTML = "";
+
+      if (products.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No products added yet.</td></tr>`;
+        return;
+      }
+
+      products.forEach((product, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${product.name}</td>
+            <td>₹ ${product.price}</td>
+            <td>${product.stock}</td>
+            <td>
+              <button class="danger" onclick="deleteProduct(${product.id})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function deleteProduct(id) {
+      products = products.filter(product => product.id !== id);
+      localStorage.setItem("products", JSON.stringify(products));
+      renderProducts();
+      renderProductDropdown();
+      updateDashboard();
+    }
+
+    function renderProductDropdown() {
+      const dropdown = document.getElementById("productDropdown");
+      dropdown.innerHTML = `<option value="">Select Product</option>`;
+
+      products.forEach(product => {
+        dropdown.innerHTML += `
+          <option value="${product.id}">
+            ${product.name} - ₹${product.price} (Stock: ${product.stock})
+          </option>
+        `;
+      });
+    }
+
+    // -------------------------
+    // BILLING
+    // -------------------------
+    function addItemFromProduct() {
+      const productId = parseInt(document.getElementById("productDropdown").value);
+      const qty = parseInt(document.getElementById("itemQty").value);
+
+      if (!productId || isNaN(qty) || qty <= 0) {
+        alert("Select a product and enter valid quantity.");
+        return;
+      }
+
+      const product = products.find(p => p.id === productId);
+
+      if (!product) {
+        alert("Product not found.");
+        return;
+      }
+
+      if (qty > product.stock) {
+        alert("Not enough stock available.");
+        return;
+      }
+
+      const total = product.price * qty;
+
+      billItems.push({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        qty,
+        total
+      });
+
+      renderBillTable();
+      document.getElementById("itemQty").value = "";
+    }
+
+    function renderBillTable() {
+      const tbody = document.getElementById("billTableBody");
+      const grandTotal = document.getElementById("grandTotal");
+      tbody.innerHTML = "";
+
+      let total = 0;
+
+      if (billItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No items added to bill.</td></tr>`;
+      }
+
+      billItems.forEach((item, index) => {
+        total += item.total;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.name}</td>
+            <td>₹ ${item.price}</td>
+            <td>${item.qty}</td>
+            <td>₹ ${item.total}</td>
+            <td>
+              <button class="danger" onclick="deleteBillItem(${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+
+      grandTotal.textContent = total.toFixed(2);
+    }
+
+    function deleteBillItem(index) {
+      billItems.splice(index, 1);
+      renderBillTable();
+    }
+
+    function saveBill() {
+      const customerName = document.getElementById("customerName").value.trim();
+      const customerPhone = document.getElementById("customerPhone").value.trim();
+      const totalAmount = parseFloat(document.getElementById("grandTotal").textContent);
+
+      if (!customerName) {
+        alert("Enter customer name.");
+        return;
+      }
+
+      if (billItems.length === 0) {
+        alert("Add at least one bill item.");
+        return;
+      }
+
+      // Reduce stock
+      billItems.forEach(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (product) {
+          product.stock -= item.qty;
+        }
+      });
+
+      const newBill = {
+        id: bills.length + 1,
+        customerName,
+        customerPhone,
+        totalAmount,
+        date: new Date().toLocaleString(),
+        items: [...billItems]
+      };
+
+      bills.push(newBill);
+
+      localStorage.setItem("bills", JSON.stringify(bills));
+      localStorage.setItem("products", JSON.stringify(products));
+
+      alert("Bill saved successfully!");
+
+      // Reset form
+      billItems = [];
+      document.getElementById("customerName").value = "";
+      document.getElementById("customerPhone").value = "";
+      document.getElementById("itemQty").value = "";
+      document.getElementById("productDropdown").value = "";
+
+      renderBillTable();
+      renderProductDropdown();
+      renderBills();
+      updateDashboard();
+    }
+
+    // -------------------------
+    // SAVED BILLS
+    // -------------------------
+    function renderBills() {
+      const tbody = document.getElementById("billsTableBody");
+      tbody.innerHTML = "";
+
+      if (bills.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5">No bills saved yet.</td></tr>`;
+        return;
+      }
+
+      bills.forEach(bill => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${bill.id}</td>
+            <td>${bill.customerName}</td>
+            <td>${bill.customerPhone || "-"}</td>
+            <td>₹ ${bill.totalAmount}</td>
+            <td>${bill.date}</td>
+          </tr>
+        `;
+      });
+    }
+
+    // -------------------------
+    // DASHBOARD
+    // -------------------------
+    function updateDashboard() {
+      document.getElementById("totalProducts").textContent = products.length;
+      document.getElementById("totalBills").textContent = bills.length;
+
+      const revenue = bills.reduce((sum, bill) => sum + bill.totalAmount, 0);
+      document.getElementById("totalRevenue").textContent = revenue.toFixed(2);
+    }
+
+    function refreshAll() {
+      renderProducts();
+      renderProductDropdown();
+      renderBillTable();
+      renderBills();
+      updateDashboard();
+    }
+
+    // initial
+    renderBillTable();
+  </script>
+</body>
+</html>
